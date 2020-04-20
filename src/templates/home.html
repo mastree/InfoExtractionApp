@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST" action="" enctype="multipart/form-data">
+            <p class="form-control-label">Teks yang ingin di ekstrak:</p> 
+            <input id="fileUpload" type="file" name="myfile" autocomplete="off" required>
+            <!-- <form class="md-form">
+                <div class="file-field">
+                    <div class="btn btn-primary btn-sm float-left">
+                    <span>Choose file</span>
+                    <input type="file" name="myfile" autocomplete="off" required>
+                    </div>
+                    <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text" placeholder="Upload your file">
+                    </div>
+                </div>
+            </form> -->
+            <!-- </br>
+            </br> -->
+            <hr>
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                {{ form.keyword.label(class="form-control-label") }}
+                {% if form.keyword.errors %}
+                    {{ form.keyword(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.keyword.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.keyword(class="form-control form-control-lg") }}
+                {% endif %}
+            </fieldset>
+            <hr>
+            <p>Pilih Algoritma</p>
+            <label class="container">
+                <input type="radio" id="chooseKMP" name="algo" value="kmp">
+                <label for="kmp">Knuth Morris Prath</label><br>
+            </label>
+            <label class="container">
+                <input type="radio" id="chooseBM" name="algo" value="bm">
+                <label for="bm">Boyer Moore</label><br>
+            </label>
+            <label class="container">
+                <input type="radio" id="chooseRE" name="algo" value="regex">
+                <label for="regex">Reguler Expression</label><br>
+            </label>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
+
+    {% for post in posts %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              <p>Keyword: {{ post.keyword }}</p>
+            </div>
+            <ul>
+                <li>Jumlah: {{ post.jumlah }}</li>
+                <li>Waktu: {{ post.waktu }}</li>
+            </ul>
+            <hr>
+            <p>Kalimat:</p>
+            <div class="quoted">
+                <p>
+                    <q>
+                        {{ post.kalimat }}
+                    </q>
+                </p>
+            </div>
+          </div>
+        </article>
+    {% endfor %}
+{% endblock content %}
