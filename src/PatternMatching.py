@@ -3,8 +3,8 @@ import re
 import nltk
 # nltk.download()
 
-# abcdkonabcd
-# 0 0 0 0 0 0 0 1 2 3 4
+# abcabcda
+# 0 0 0 1 2 3 0 1
 
 teks_test = '''
 421 Orang di Jabar Terkonfirmasi Positif COVID-19
@@ -29,10 +29,11 @@ day = r'(senin|selasa|rabu|kamis|jumat|sabtu|minggu)'
 month = r'''(januari|februari|maret|april|mei|juni|juli|agustus|september|oktober|november|desember|
 jan|feb|mar|apr|mei|jun|jul|aug|sep|okt|nov|des)''' 
 tanggal = r'(({dd}(/|-)({mm}|{month})(/|-){yy})|({dd}\s{month}\s{yy}))'.format(dd = dd, day = day, mm = mm, month = month, yy = yy)
+tanggal = r'({tanggal}|({dd}(/|-)({mm}|{month}))|({dd}\s{month})|({month}\s{yy}))'.format(tanggal = tanggal, dd = dd, mm = mm, month = month, yy = yy)
 
 time_zone = r'(WIB|WITA|WIT|UTC)'
 hh_mm = r'(([0-1][0-9]|2[0-3])(:|\.)[0-5][0-9])'
-waktu = r'({hh_mm}\s{time_zone})'.format(hh_mm = hh_mm, time_zone = time_zone)
+waktu = r'({hh_mm}\s{time_zone}|{hh_mm})'.format(hh_mm = hh_mm, time_zone = time_zone)
 
 integer = r'([1-9]\d*|0)'
 biginteger = r'([1-9]\d{0,2}(\.\d{3})*)'
@@ -77,7 +78,7 @@ def boyerMoore(s1, s2): # finding pattern s1 in s2
     s2 = s2.lower()
     len1 = len(s1)
     len2 = len(s2)
-    last = [len1] * 256
+    last = [-1] * 256 # ASCII ada 256 character
 
     result = []
     for i in range(len2):
