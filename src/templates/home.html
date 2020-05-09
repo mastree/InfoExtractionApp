@@ -4,19 +4,6 @@
         <form method="POST" action="" enctype="multipart/form-data">
             <p class="form-control-label">Teks yang ingin di ekstrak:</p> 
             <input id="fileUpload" type="file" name="myfile" autocomplete="off" required multiple>
-            <!-- <form class="md-form">
-                <div class="file-field">
-                    <div class="btn btn-primary btn-sm float-left">
-                    <span>Choose file</span>
-                    <input type="file" name="myfile" autocomplete="off" required>
-                    </div>
-                    <div class="file-path-wrapper">
-                    <input class="file-path validate" type="text" placeholder="Upload your file">
-                    </div>
-                </div>
-            </form> -->
-            <!-- </br>
-            </br> -->
             <hr>
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
@@ -36,7 +23,7 @@
             <p>Pilih Algoritma</p>
             <label class="container">
                 <input type="radio" id="chooseKMP" name="algo" value="kmp">
-                <label for="kmp">Knuth Morris Prath</label><br>
+                <label for="kmp">Knuth Morris Pratt</label><br>
             </label>
             <label class="container">
                 <input type="radio" id="chooseBM" name="algo" value="bm">

@@ -1,22 +1,13 @@
 import os.path
 import re
 import nltk
-# nltk.download()
+
+# Note:
 
 # abcabcda
 # 0 0 0 1 2 3 0 1
 
-teks_test = '''
-421 Orang di Jabar Terkonfirmasi Positif COVID-19
-Yudha Maulana - detikNews
-Sabtu, 11 Apr 2020 20:07 WIB
-Bandung - Angka positif virus Corona atau COVID-19 di Jawa Barat menembus angka 400 kasus. Laman Pusat Informasi dan Koordinasi COVID-19 Jabar (Pikobar) pada Sabtu (11/4/2020) pukul 18.43 WIB, mencatat terdapat 421 orang yang terkonfirmasi positif COVID-19.
-Dibandingkan sehari sebelumnya, jumlah tercatat yaitu 388 orang. Terjadi penambahan 8,5 persen atau 33 kasus per harinya. Sementara itu, secara nasional terdapat 3.842 kasus positif COVID-19.
-Dari 421 kasus tersebut, 40 orang meninggal dunia dengan keterangan terpapar COVID-19. Sedangkan, angka kesembuhan di Jabar masih tetap berada di angka 19 orang.
-Per hari jumlah Orang Dalam Pemantauan (ODP) di Jabar mencapai 28.775 orang. Sebanyak 15.363 di antaranya masih menjalani proses pemantauan dan 13.412 orang lainnya telah selesai menjalani proses pemantauan.
-Sementara itu jumlah Pasien Dalam Pengawasan (PDP) mencapai 2.278 orang. Tercatat 1.344 orang masih menjalani proses pengawasan dan 934 orang lainnya telah selesai menjalani proses pengawasan.
-'''
-# MetaCharacters (Need to be escaped):
+# MetaCharacters:
 # . ^ $ * + ? { } [ ] \ | ( )
 
 INFINITE = 1000000000
@@ -37,7 +28,7 @@ waktu = r'({hh_mm}\s{time_zone}|{hh_mm})'.format(hh_mm = hh_mm, time_zone = time
 
 integer = r'([1-9]\d*|0)'
 biginteger = r'([1-9]\d{0,2}(\.\d{3})*)'
-angka = r'({integer},\d+|{biginteger}|{integer})'.format(integer = integer, biginteger = biginteger) # koma = ','
+angka = r'({integer},\d+|{biginteger}|{integer})'.format(integer = integer, biginteger = biginteger) # koma = ','(standard Indonesia)
 
 def prefixFunc(s):
     n = len(s)
@@ -62,7 +53,7 @@ def KMP(s1, s2): # finding pattern s1 in s2
     len2 = len(s2)
 
     result = []
-    for ri in range(0, len2):
+    for ri in range(len2):
         while (s1[le] != s2[ri] and le != 0):
             le = pref[le - 1]
         if (s1[le] == s2[ri]):
@@ -70,7 +61,6 @@ def KMP(s1, s2): # finding pattern s1 in s2
         if (le == len1):
             result.append((ri - len1 + 1, ri + 1))
             le = pref[le - 1]
-            # le = 0
     return result
 
 def boyerMoore(s1, s2): # finding pattern s1 in s2
@@ -110,7 +100,7 @@ def regex(s1, s2): # finding pattern s1 in s2
         result.append((match.start(), match.end()))
     return result
 
-def cheat(s1, s2):
+def extractInfo(s1, s2):
     s1 = r' ({s1}) '.format(s1 = s1)
     pat = re.compile(s1, re.I)
     temp = pat.finditer(s2)
@@ -174,10 +164,10 @@ def findKeyword(pattern, text, algo): # algo kmp, bm, regex
         else:
             resOfAlgo.append(regex(pattern, temp))
 
-        resOfDay.append(cheat(day, temp))
-        resOfDate.append(cheat(tanggal, temp))
-        resOfTime.append(cheat(waktu, temp))
-        resOfNum.append(cheat(angka, temp))
+        resOfDay.append(extractInfo(day, temp))
+        resOfDate.append(extractInfo(tanggal, temp))
+        resOfTime.append(extractInfo(waktu, temp))
+        resOfNum.append(extractInfo(angka, temp))
 
         numLen = len(resOfNum[idx])
         dateLen = len(resOfDate[idx])

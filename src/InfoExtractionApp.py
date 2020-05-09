@@ -4,24 +4,16 @@ from flask import Flask, render_template, url_for, flash, redirect, request
 from forms import KeywordForm
 from werkzeug.utils import secure_filename
 
-from ProcessUtil import *
 from PatternMatching import *
 
-UPLOAD_FOLDER = os.path.dirname(__file__) + "\\..\\temp"
-
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-'''
-Keyword: terkonfirmasi positif
-Hasil ekstraksi informasi:
-Jumlah: 421; Waktu: Sabtu, 11 Apr 2020 20:07 WIB
-421 Orang di Jabar Terkonfirmasi Positif COVID-19.
-'''
-
-# DUMMY
+app.config['SECRET_KEY'] = 'QUNGQANGQINGQONG'
 posts = []
+
+ALLOWED_EXTENSIONS = set(['txt'])
+
+def allowed_file(filename):
+	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route("/")
 @app.route("/home")
@@ -51,22 +43,10 @@ def query():
         for file in files:
             if (file and allowed_file(file.filename)):
                 filename = secure_filename(file.filename)
-                teks_path = os.path.join(app.config['UPLOAD_FOLDER'], "input.txt")
-                keyword_path = os.path.join(app.config['UPLOAD_FOLDER'], "keyword.txt")
-                file.save(teks_path)
-                kfile = open(keyword_path, 'w')
-                kfile.write(form.keyword.data)
-                kfile.close()
-
                 algoPilihan = request.form['algo']
-                print(algoPilihan)
-
-                teks = ''
-                pattern = ''
-                with open(teks_path, 'r') as fileContent:
-                    teks = fileContent.read()
-                with open(keyword_path, 'r') as fileContent:
-                    pattern = fileContent.read()
+                file = file.read()
+                teks = file.decode("utf-8")
+                pattern = form.keyword.data
                 resFile = findKeyword(pattern, teks, algoPilihan)
                 resLen = len(resFile)
                 for i in range(resLen):
@@ -86,6 +66,6 @@ def query():
 def about():
     return render_template('about.html', title='About')
 
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    # app.run(debug=True)
+    app.run()
